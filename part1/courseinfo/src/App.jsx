@@ -21,7 +21,7 @@ const Content = (props) => {
 }
 
 const Total = (props) => {
-  var sum = 0
+  let sum = 0
   props.numbers.forEach((item) => {
     sum += item
   });
