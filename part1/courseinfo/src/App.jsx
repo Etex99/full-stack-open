@@ -14,16 +14,16 @@ const Content = (props) => {
   console.log(props)
   return (
     <div>
-      <Part label={props.parts[0].name} count={props.parts[0].exercises}/>
-      <Part label={props.parts[1].name} count={props.parts[1].exercises}/>
-      <Part label={props.parts[2].name} count={props.parts[2].exercises}/>
+      <Part label={props.parts[0].name} count={props.parts[0].exercises} />
+      <Part label={props.parts[1].name} count={props.parts[1].exercises} />
+      <Part label={props.parts[2].name} count={props.parts[2].exercises} />
     </div>
   )
 }
 
 const Total = (props) => {
   let sum = 0
-  props.numbers.forEach((item) => {
+  props.numbers.map((item) => {
     sum += item
   });
 
@@ -33,30 +33,34 @@ const Total = (props) => {
 }
 
 const App = () => {
-  const course = 'Half Stack application development'
-  const part1 = {
-    name: 'Fundamentals of React',
-    exercises: 10
+  const course = {
+    name: 'Half Stack application development',
+    parts: [
+      {
+        name: 'Fundamentals of React',
+        exercises: 10
+      },
+      {
+        name: 'Using props to pass data',
+        exercises: 7
+      },
+      {
+        name: 'State of a component',
+        exercises: 14
+      }
+    ]
   }
-  const part2 = {
-    name: 'Using props to pass data',
-    exercises: 7
-  }
-  const part3 = {
-    name: 'State of a component',
-    exercises: 14
-  }
-  const numbers = [part1.exercises, part2.exercises, part3.exercises]
+  let exercises = course.parts.map((item) => item.exercises)
 
   return (
     <div>
-      <Header label={course} />
-      <Content 
-        parts={[part1, part2, part3]}
+      <Header label={course.name} />
+      <Content
+        parts={course.parts}
       />
       <Total
-        label="Number of exercises" 
-        numbers={numbers}
+        label="Number of exercises"
+        numbers={exercises}
       />
     </div>
   )
