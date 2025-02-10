@@ -23,9 +23,9 @@ const Content = (props) => {
 
 const Total = (props) => {
   let sum = 0
-  props.numbers.map((item) => {
+  for (const item of props.numbers) {
     sum += item
-  });
+  }
 
   return (
     <p>{props.label} {sum}</p>
