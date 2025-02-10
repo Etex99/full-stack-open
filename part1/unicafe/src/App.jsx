@@ -2,23 +2,26 @@ import { useState } from 'react'
 
 const Button = ({onClick, label}) => <button onClick={onClick}>{label}</button>
 
-const Display = ({label, value}) => <p>{`${label} ${value}`}</p>
+const StatisticLine = ({label, value}) => <p>{`${label} ${value}`}</p>
 
-const CalculatedStats = ({good, bad, total}) => {
-
+const Statistics = ({good, neutral, bad, total}) => {
   const feedbackAverage = () => (good + bad * -1) / total
   const percentagePositive = () => good / total * 100
 
   if (total === 0) {
     return (
-      <p>give feedback to calculate rating average and percentage of positive ratings</p>
+      <p>give feedback to show feedback statistics</p>
     )
   }
 
   return (
     <>
-      <Display label="average" value={feedbackAverage()}/>
-      <Display label="positive" value={`${percentagePositive()} %`}/>
+      <StatisticLine label="good" value={good}/>
+      <StatisticLine label="neutral" value={neutral}/>
+      <StatisticLine label="bad" value={bad}/>
+      <StatisticLine label="all" value={total}/>
+      <StatisticLine label="average" value={feedbackAverage()}/>
+      <StatisticLine label="positive" value={`${percentagePositive()} %`}/>
     </>
   )
 }
@@ -54,11 +57,8 @@ const App = () => {
       <Button onClick={() => giveFeedback(0)} label="neutral"/>
       <Button onClick={() => giveFeedback(-1)} label="bad"/>
       <h1>statistics</h1>
-      <Display label="good" value={good}/>
-      <Display label="neutral" value={neutral}/>
-      <Display label="bad" value={bad}/>
-      <Display label="all" value={total}/>
-      <CalculatedStats good={good} bad={bad} total={total}/>
+      
+      <Statistics good={good} neutral={neutral} bad={bad} total={total}/>
     </div>
   )
 }
