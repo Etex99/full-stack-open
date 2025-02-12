@@ -37,11 +37,11 @@ const App = () => {
   }
 
   const nextAnecdote = () => {
-    if (selected === anecdotes.length-1) {
-      setSelected(0)
-      return
-    }
-    setSelected(selected+1)
+    let randomNumber
+    do {
+      randomNumber = Math.round(Math.random() * (anecdotes.length-1))
+    } while (randomNumber === selected);
+    setSelected(randomNumber)
   }
 
   return (
