@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import personsService from "./services/persons"
 import Filter from "./components/Filter"
 import PersonForm from "./components/PersonForm"
 import Persons from "./components/Persons"
@@ -8,21 +8,29 @@ const App = () => {
   /* persons */
   const [persons, setPersons] = useState([])
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons').then(response => {
-        setPersons(response.data)
-      })
+    personsService.getAll()
+      .then(result => setPersons(result))
+      .catch(error => console.error(error))
   }, [])
   const addNewPerson = (name, number) => {
     if (persons.some(i => i.name.toLowerCase() === name.toLowerCase())) {
       alert(`${name} has already been added to the phonebook.`)
       return
     }
-
-    let newPersons = [...persons]
-    newPersons = newPersons.concat({ name: name, number: number, id: persons.length + 1 })
-    setPersons(newPersons)
-    console.log(newPersons);
+    const newPerson = { name, number }
+    personsService.create(newPerson).then(result => {
+      setPersons(persons.concat(result))
+    })
+  }
+  const handleRemovePerson = (personToRemove) => {
+    if (!confirm(`Delete ${personToRemove.name}?`)) {
+      return
+    }
+    personsService.remove(personToRemove.id)
+      .then(response => {
+        setPersons(persons.filter(i => i.id !== personToRemove.id))
+      })
+      .catch(error => console.error(error))
   }
 
   /* new person form */
@@ -60,7 +68,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} handleRemovePerson={handleRemovePerson} />
     </div>
   )
 }

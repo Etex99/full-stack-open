@@ -1,24 +1,19 @@
 {
-    "persons": [
-        {
-            "name": "Arto Hellas",
-            "number": "040-123456",
-            "id": "1"
-        },
-        {
-            "name": "Ada Lovelace",
-            "number": "39-44-5323523",
-            "id": "2"
-        },
-        {
-            "name": "Dan Abramov",
-            "number": "12-43-234345",
-            "id": "3"
-        },
-        {
-            "name": "Mary Poppendieck",
-            "number": "39-23-6423122",
-            "id": "4"
-        }
-    ]
+  "persons": [
+    {
+      "id": "9e96",
+      "name": "Ghostbusters",
+      "number": "555-2368"
+    },
+    {
+      "id": "96fc",
+      "name": "His Holiness Pope Francis",
+      "number": "+390669881022"
+    },
+    {
+      "id": "13d5",
+      "name": "Santa's Hotline",
+      "number": "1-605-313-4000"
+    }
+  ]
 }
