@@ -1,7 +1,7 @@
-const Filter = ({ searchFilter, handleSearchFilterChange }) => {
+const Filter = ({ searchFilter, onSearchFilterChange }) => {
     return (
         <div>
-            <p>filter shown with: <input value={searchFilter} onChange={handleSearchFilterChange} /></p>
+            <p>filter shown with: <input value={searchFilter} onChange={onSearchFilterChange} /></p>
         </div>
     )
 }

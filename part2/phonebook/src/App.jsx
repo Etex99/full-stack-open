@@ -7,21 +7,16 @@ import Persons from "./components/Persons"
 const App = () => {
   /* persons */
   const [persons, setPersons] = useState([])
+  const [newName, setNewName] = useState("")
+  const [newNumber, setNewNumber] = useState("")
+  const [searchFilter, setSearchFilter] = useState("")
+
   useEffect(() => {
     personsService.getAll()
       .then(result => setPersons(result))
       .catch(error => console.error(error))
   }, [])
-  const addNewPerson = (name, number) => {
-    if (persons.some(i => i.name.toLowerCase() === name.toLowerCase())) {
-      alert(`${name} has already been added to the phonebook.`)
-      return
-    }
-    const newPerson = { name, number }
-    personsService.create(newPerson).then(result => {
-      setPersons(persons.concat(result))
-    })
-  }
+
   const handleRemovePerson = (personToRemove) => {
     if (!confirm(`Delete ${personToRemove.name}?`)) {
       return
@@ -33,37 +28,44 @@ const App = () => {
       .catch(error => console.error(error))
   }
 
-  /* new person form */
-  const [newName, setNewName] = useState("")
-  const [newNumber, setNewNumber] = useState("")
-
-  const onNewPersonSubmit = (event) => {
+  const onSubmitNewPerson = (event) => {
     event.preventDefault()
-    addNewPerson(newName, newNumber)
+    let samePerson = persons.find(i => i.name.toLowerCase() === newName.toLowerCase())
+    if (samePerson !== undefined) {
+      if (confirm(`${newName} has already been added to the phonebook. Replace the old number with the new one?`)) {
+        const modifiedPerson = {...samePerson, number: newNumber}
+        personsService.modify(modifiedPerson).then(result => {
+          setPersons(persons.map(i => i.id === result.id ? result : i))
+        })
+      }
+    } else {
+      const newPerson = { name: newName, number: newNumber }
+      personsService.create(newPerson).then(result => {
+      setPersons(persons.concat(result))
+    })
+    }
     setNewName("")
     setNewNumber("")
   }
 
-
   /* search filter */
-  const [searchFilter, setSearchFilter] = useState("")
-  const handleSearchFilterChange = (event) => setSearchFilter(event.target.value)
+  const onSearchFilterChange = (event) => setSearchFilter(event.target.value)
   const personsToShow = persons.filter(i => i.name.toLowerCase().includes(searchFilter))
 
   return (
     <div>
       <h2>Phonebook</h2>
 
-      <Filter searchFilter={searchFilter} handleSearchFilterChange={handleSearchFilterChange} />
+      <Filter searchFilter={searchFilter} onSearchFilterChange={onSearchFilterChange} />
 
       <h3>Add a new</h3>
 
       <PersonForm 
         newName={newName} 
         newNumber={newNumber} 
-        handleNewNameChange={(event) => setNewName(event.target.value)} 
-        handleNewNumberChange={(event) => setNewNumber(event.target.value)} 
-        onSubmit={onNewPersonSubmit}
+        onChangeNewName={(event) => setNewName(event.target.value)} 
+        onChangeNewNumber={(event) => setNewNumber(event.target.value)} 
+        onSubmitNewPerson={onSubmitNewPerson}
       />
 
       <h3>Numbers</h3>
