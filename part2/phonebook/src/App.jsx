@@ -41,24 +41,33 @@ const App = () => {
     let samePerson = persons.find(i => i.name.toLowerCase() === newName.toLowerCase())
     if (samePerson !== undefined) {
       if (confirm(`${newName} has already been added to the phonebook. Replace the old number with the new one?`)) {
-        const modifiedPerson = {...samePerson, number: newNumber}
+        const modifiedPerson = {id: samePerson.id, name: newName, number: newNumber}
         personsService.modify(modifiedPerson)
           .then(result => {
             setPersons(persons.map(i => i.id === result.id ? result : i))
             notify(`Number of ${modifiedPerson.name} has been modified`, "successful-action", 5000)
           })
           .catch(error => {
-            setPersons(persons.filter(i => i.id !== modifiedPerson.id))
-            console.log(error);
-            notify(`${modifiedPerson.name} cannot be modified as it does not exist`, "error", 5000)
+            console.log(error)
+            if (error instanceof TypeError) {
+              setPersons(persons.filter(i => i.id !== modifiedPerson.id))
+              notify(`${modifiedPerson.name} cannot be modified as it does not exist`, "error", 5000)
+            } else if (error.status === 400) {
+              notify(`${modifiedPerson.name} cannot be modified because the number is invalid.`, "error", 5000)
+            }
           })
       }
     } else {
       const newPerson = { name: newName, number: newNumber }
-      personsService.create(newPerson).then(result => {
-      setPersons(persons.concat(result))
-      notify(`${newName} has been added to the phonebook`, "successful-action", 5000)
-    })
+      personsService.create(newPerson)
+        .then(result => {
+          setPersons(persons.concat(result))
+          notify(`${newName} has been added to the phonebook`, "successful-action", 5000)
+        })
+        .catch(error => {
+          console.log(error);
+          notify("Cannot add entry to phonebook. Name or number is invalid.", "error", 5000)
+        })
     }
     setNewName("")
     setNewNumber("")
